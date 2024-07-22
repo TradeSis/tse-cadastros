@@ -40,23 +40,20 @@ then do:
     vetbcod = ttentrada.etbcod.
 end.
 
-IF ttentrada.etbcod <> ? OR (ttentrada.etbcod = ?)
-THEN DO:
-    for each estab where
-        (if vetbcod = ?
-         then true /* TODOS */
-         else estab.etbcod = vetbcod) 
-         no-lock.
-         
-         contador = contador + 1.
-        IF contador > ttentrada.pagina and contador <= varPagina THEN DO:
-            create ttestab.
-            ttestab.etbcod    = estab.etbcod.
-            ttestab.etbnom   = removeacento(estab.etbnom).
-            ttestab.munic   = removeacento(estab.munic).
-        end.
+for each estab where
+    (if vetbcod = ?
+     then true /* TODOS */
+     else estab.etbcod = vetbcod) 
+     no-lock.
+     
+     contador = contador + 1.
+    IF contador > ttentrada.pagina and contador <= varPagina THEN DO:
+        create ttestab.
+        ttestab.etbcod    = estab.etbcod.
+        ttestab.etbnom   = removeacento(estab.etbnom).
+        ttestab.munic   = removeacento(estab.munic).
     end.
-END.
+end.
 
 
 find first ttestab no-error.

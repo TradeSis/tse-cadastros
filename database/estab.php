@@ -76,11 +76,12 @@ if (isset($_GET['operacao'])) {
 		$idEmpresa = isset($_POST["idEmpresa"])  && $_POST["idEmpresa"] !== "" && $_POST["idEmpresa"] !== "null" ? $_POST["idEmpresa"]  : $_SESSION['idEmpresa'];
 
 		$apiEntrada = 
+		array("estab" =>
 		array(
 			'etbcod' => $etbcod,
 			'pagina' => $pagina,
 			'idEmpresa' => $idEmpresa
-		);
+		));
 		$estab = chamaAPI(null, '/cadastros/estab', json_encode($apiEntrada), 'GET');
 
 		echo json_encode($estab);

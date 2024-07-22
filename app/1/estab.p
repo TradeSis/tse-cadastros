@@ -12,7 +12,7 @@ def temp-table ttentrada no-undo serialize-name "estab"   /* JSON ENTRADA */
     field etbcod  like estab.etbcod
     field pagina  AS INT.
 
-{sistema/database/acentos.i}
+/* {sistema/database/acentos.i} */
 
 def temp-table ttestab  no-undo serialize-name "estab"  /* JSON SAIDA */
     FIELD etbcod like estab.etbcod
@@ -50,8 +50,8 @@ for each estab where
     IF contador > ttentrada.pagina and contador <= varPagina THEN DO:
         create ttestab.
         ttestab.etbcod    = estab.etbcod.
-        ttestab.etbnom   = removeacento(estab.etbnom).
-        ttestab.munic   = removeacento(estab.munic).
+        ttestab.etbnom   = estab.etbnom.
+        ttestab.munic   = estab.munic.
     end.
 end.
 

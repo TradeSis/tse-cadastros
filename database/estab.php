@@ -17,11 +17,11 @@ function buscaEstabelecimento($etbcod = null, $pagina = null)
 	}
 	$apiEntrada =
 		array("estab" =>
-		array(
+		array(array(
 			'etbcod' => $etbcod,
 			'pagina' => $pagina,
 			'idEmpresa' => $idEmpresa
-		));
+		)));
 	$estab = chamaAPI(null, '/cadastros/estab', json_encode($apiEntrada), 'GET');
 	return $estab;
 }
@@ -77,11 +77,11 @@ if (isset($_GET['operacao'])) {
 
 		$apiEntrada = 
 		array("estab" =>
-		array(
+		array(array(
 			'etbcod' => $etbcod,
 			'pagina' => $pagina,
 			'idEmpresa' => $idEmpresa
-		));
+		)));
 		$estab = chamaAPI(null, '/cadastros/estab', json_encode($apiEntrada), 'GET');
 
 		echo json_encode($estab);

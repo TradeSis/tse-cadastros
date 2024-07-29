@@ -5,6 +5,7 @@ include_once(__DIR__ . '/../header.php');
 include_once(ROOT . '/impostos/database/caracTrib.php');
 
 $caracTribs = buscaCaracTrib();
+//echo json_encode($_SESSION['idEmpresa'])
 ?>
 <!doctype html>
 <html lang="pt-BR">
@@ -262,12 +263,12 @@ $caracTribs = buscaCaracTrib();
                                             </div>
                                             <div class="col-md" style="margin-top: 2px;">
                                                 <label class="form-label ts-label">caracTrib</label>
-                                               
+
 
                                                 <select class="form-select ts-input" name="caracTrib" id="caracTrib_complementar">
                                                     <option value="<?php echo null ?>"><?php echo "Selecione" ?></option>
                                                     <?php foreach ($caracTribs as $caracTrib) { ?>
-                                                    <option value="<?php echo $caracTrib['caracTrib'] ?>"><?php echo $caracTrib['caracTrib'] ?> - <?php echo $caracTrib['descricaoCaracTrib'] ?></option>
+                                                        <option value="<?php echo $caracTrib['caracTrib'] ?>"><?php echo $caracTrib['caracTrib'] ?> - <?php echo $caracTrib['descricaoCaracTrib'] ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -326,21 +327,21 @@ $caracTribs = buscaCaracTrib();
                                             </div>
                                             <div class="col-md">
                                                 <label class="form-label ts-label">Nome<span class="text-danger"> * </span></label>
-                                                <input type="text" class="form-control ts-input" name="nomePessoa" required>
+                                                <input type="text" class="form-control ts-input" name="nomePessoa" id="nomePessoa_inserirgeral" required>
                                             </div>
                                         </div>
                                         <div class="row mt-2">
                                             <div class="col-md">
                                                 <label class="form-label ts-label">Nome Fantasia</label>
-                                                <input type="text" class="form-control ts-input" name="nomeFantasia">
+                                                <input type="text" class="form-control ts-input" name="nomeFantasia" id="nomeFantasia_inserirgeral">
                                             </div>
                                             <div class="col-md">
                                                 <label class="form-label ts-label">Email</label>
-                                                <input type="text" class="form-control ts-input" name="email">
+                                                <input type="text" class="form-control ts-input" name="email" id="email_inserirgeral">
                                             </div>
                                             <div class="col-md">
                                                 <label class="form-label ts-label">Telefone</label>
-                                                <input type="text" class="form-control ts-input" name="telefone">
+                                                <input type="text" class="form-control ts-input" name="telefone" id="telefone__inserirgeral">
                                             </div>
                                         </div>
                                     </div><!-- container 1 -->
@@ -351,43 +352,43 @@ $caracTribs = buscaCaracTrib();
                                         <div class="row mt-3">
                                             <div class="col">
                                                 <label class="form-label ts-label">codigoCidade</label>
-                                                <input type="text" class="form-control ts-input" name="codigoCidade">
+                                                <input type="text" class="form-control ts-input" name="codigoCidade" id="codigoCidade_inserirgeral">
                                             </div>
                                             <div class="col">
                                                 <label class="form-label ts-label">codigoEstado</label>
-                                                <input type="text" class="form-control ts-input" name="codigoEstado">
+                                                <input type="text" class="form-control ts-input" name="codigoEstado" id="codigoEstado_inserirgeral">
                                             </div>
                                             <div class="col">
                                                 <label class="form-label ts-label">CEP</label>
-                                                <input type="text" class="form-control ts-input" name="cep">
+                                                <input type="text" class="form-control ts-input" name="cep" id="cep_inserirgeral">
                                             </div>
                                         </div>
                                         <div class="row mt-3">
                                             <div class="col-md">
                                                 <label class="form-label ts-label">Bairro</label>
-                                                <input type="text" class="form-control ts-input" name="bairro">
+                                                <input type="text" class="form-control ts-input" name="bairro" id="bairro_inserirgeral">
                                             </div>
                                             <div class="col-md">
                                                 <label class="form-label ts-label">Endereço</label>
-                                                <input type="text" class="form-control ts-input" name="endereco">
+                                                <input type="text" class="form-control ts-input" name="endereco" id="endereco_inserirgeral">
                                             </div>
                                             <div class="col-md-2">
                                                 <label class="form-label ts-label">Numero</label>
-                                                <input type="text" class="form-control ts-input" name="endNumero">
+                                                <input type="text" class="form-control ts-input" name="endNumero" id="endNumero_inserirgeral">
                                             </div>
                                         </div>
                                         <div class="row mt-3">
                                             <div class="col-md">
                                                 <label class="form-label ts-label">Município</label>
-                                                <input type="text" class="form-control ts-input" name="municipio">
+                                                <input type="text" class="form-control ts-input" name="municipio" id="municipio_inserirgeral">
                                             </div>
                                             <div class="col-md">
                                                 <label class="form-label ts-label">IE</label>
-                                                <input type="text" class="form-control ts-input" name="IE">
+                                                <input type="text" class="form-control ts-input" name="IE" id="IE_inserirgeral">
                                             </div>
                                             <div class="col-md">
                                                 <label class="form-label ts-label">País</label>
-                                                <input type="text" class="form-control ts-input" name="pais">
+                                                <input type="text" class="form-control ts-input" name="pais" id="pais_inserirgeral">
                                             </div>
                                         </div>
                                     </div><!-- container 2 -->
@@ -438,7 +439,7 @@ $caracTribs = buscaCaracTrib();
                                                 <select class="form-select ts-input" name="caracTrib" id="caracTrib_inserirgeral">
                                                     <option value="<?php echo null ?>"><?php echo "Selecione" ?></option>
                                                     <?php foreach ($caracTribs as $caracTrib) { ?>
-                                                    <option value="<?php echo $caracTrib['caracTrib'] ?>"><?php echo $caracTrib['caracTrib'] ?> - <?php echo $caracTrib['descricaoCaracTrib'] ?></option>
+                                                        <option value="<?php echo $caracTrib['caracTrib'] ?>"><?php echo $caracTrib['caracTrib'] ?> - <?php echo $caracTrib['descricaoCaracTrib'] ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -513,7 +514,7 @@ $caracTribs = buscaCaracTrib();
                                                 <label class="form-label ts-label">Nome Fantasia</label>
                                                 <input type="text" class="form-control ts-input" name="nomeFantasia" id="nomeFantasia" <?php if ($_SESSION['administradora'] != 1) {
                                                                                                                                             echo "readonly";
-                                                                                                                                        } ?> >
+                                                                                                                                        } ?>>
                                             </div>
                                             <div class="col-md">
                                                 <label class="form-label ts-label">Email</label>
@@ -534,13 +535,13 @@ $caracTribs = buscaCaracTrib();
                                                 <label class="form-label ts-label">codigoCidade</label>
                                                 <input type="text" class="form-control ts-input" id="codigoCidade" name="codigoCidade" <?php if ($_SESSION['administradora'] != 1) {
                                                                                                                                             echo "readonly";
-                                                                                                                                        } ?> >
+                                                                                                                                        } ?>>
                                             </div>
                                             <div class="col-md">
                                                 <label class="form-label ts-label">codigoEstado</label>
                                                 <input type="text" class="form-control ts-input" id="codigoEstado" name="codigoEstado" <?php if ($_SESSION['administradora'] != 1) {
                                                                                                                                             echo "readonly";
-                                                                                                                                        } ?> >
+                                                                                                                                        } ?>>
                                             </div>
                                             <div class="col-md">
                                                 <label class="form-label ts-label">CEP</label>
@@ -624,7 +625,7 @@ $caracTribs = buscaCaracTrib();
                                                                                     } ?>" name="caracTrib" id="caracTrib">
                                                     <option value="<?php echo null ?>"><?php echo "Selecione" ?></option>
                                                     <?php foreach ($caracTribs as $caracTrib) { ?>
-                                                    <option value="<?php echo $caracTrib['caracTrib'] ?>"><?php echo $caracTrib['caracTrib'] ?> - <?php echo $caracTrib['descricaoCaracTrib'] ?></option>
+                                                        <option value="<?php echo $caracTrib['caracTrib'] ?>"><?php echo $caracTrib['caracTrib'] ?> - <?php echo $caracTrib['descricaoCaracTrib'] ?></option>
                                                     <?php } ?>
                                                 </select>
                                             </div>
@@ -725,15 +726,15 @@ $caracTribs = buscaCaracTrib();
                     idPessoa: idPessoa
                 },
                 success: function(data) {
-                    
+
                     $('#idPessoa').val(data.idPessoa);
                     $('#tipoPessoa').val(data.tipoPessoa);
-                    if(data.tipoPessoa == "F"){
+                    if (data.tipoPessoa == "F") {
                         $('#tabAlterar3-tab').addClass('d-none');
                         $('#tabAlterar3').addClass('d-none');
-                    }else{
+                    } else {
                         $('#tabAlterar3-tab').removeClass('d-none');
-                        $('#tabAlterar3').removeClass('d-none'); 
+                        $('#tabAlterar3').removeClass('d-none');
                     }
                     $('#cpfCnpj').val(data.cpfCnpj);
                     $('#nomePessoa').val(data.nomePessoa);
@@ -761,7 +762,7 @@ $caracTribs = buscaCaracTrib();
                     $('#cnae').val(data.cnae);
 
                     <?php if ($_SESSION['administradora'] != 1) { ?>
-                        (data.email == null || data.email == '' ? $("#email").prop('readonly', false) : $("#email").prop('readonly', true));
+                            (data.email == null || data.email == '' ? $("#email").prop('readonly', false) : $("#email").prop('readonly', true));
                         (data.telefone == null || data.telefone == '' ? $("#telefone").prop('readonly', false) : $("#telefone").prop('readonly', true));
                         (data.codigoCidade == null || data.codigoCidade == '' || data.codigoCidade == 0 ? $("#codigoCidade").prop('readonly', false) : $("#codigoCidade").prop('readonly', true));
                         (data.codigoEstado == null || data.codigoEstado == '' ? $("#codigoEstado").prop('readonly', false) : $("#codigoEstado").prop('readonly', true));
@@ -1009,7 +1010,7 @@ $caracTribs = buscaCaracTrib();
                                         $('#cnae_complementar').val(object.cnae);
 
                                         <?php if ($_SESSION['administradora'] != 1) { ?>
-                                            (object.email == null || object.email == '' ? $("#email_complementar").prop('readonly', false) : $("#email_complementar").prop('readonly', true));
+                                                (object.email == null || object.email == '' ? $("#email_complementar").prop('readonly', false) : $("#email_complementar").prop('readonly', true));
                                             (object.telefone == null || object.telefone == '' ? $("#telefone_complementar").prop('readonly', false) : $("#telefone_complementar").prop('readonly', true));
                                             (object.cep == null || object.cep == '' ? $("#cep_complementar").prop('readonly', false) : $("#cep_complementar").prop('readonly', true));
                                             (object.bairro == null || object.bairro == '' ? $("#bairro_complementar").prop('readonly', false) : $("#bairro_complementar").prop('readonly', true));
@@ -1034,11 +1035,50 @@ $caracTribs = buscaCaracTrib();
                             $('#inserirPessoaModal').modal('show');
                         } else if (json.descricao == "cria pessoas geralpessoas") {
 
-                            $('#cpfCnpj_inserirgeral').val(cpfCnpj_formEntrada);
-                            $('#tipoPessoa_inserirgeral').val(tipoPessoa_formEntrada);
+                            //$('#cpfCnpj_inserirgeral').val(cpfCnpj_formEntrada);
+                            //$('#tipoPessoa_inserirgeral').val(tipoPessoa_formEntrada);
+                            //CHAMA API DA SERPRO
+                            $.ajax({
+                                type: 'POST',
+                                dataType: 'html',
+                                url: '<?php echo URLROOT ?>/admin/database/consulta_cnpj.php?operacao=buscar',
+                                beforeSend: function() {
+                                    setTimeout(function() {
+                                        $("#consultarPessoa-btn").prop('disabled', true);
+                                        $(".span-load").addClass("spinner-border");
 
-                            $('#verificaPessoaModal').modal('hide');
-                            $('#inserirGeralModal').modal('show');
+                                    }, 300);
+                                },
+                                data: {
+                                    idEmpresa: 1,
+                                    cnpj: cpfCnpj_formEntrada
+                                },
+                                success: function(msg) {
+                                    $("#consultarPessoa-btn").prop('disabled', false);
+                                    $(".span-load").removeClass("spinner-border");
+                                    //console.log(JSON.stringify(msg, null, 2));
+                                    var json = JSON.parse(msg);
+
+                                    $('#cpfCnpj_inserirgeral').val(cpfCnpj_formEntrada);
+                                    $('#tipoPessoa_inserirgeral').val(tipoPessoa_formEntrada);
+                                    $('#nomePessoa_inserirgeral').val(json.nome);
+                                    $('#nomeFantasia_inserirgeral').val(json.nomeFantasia);
+                                    $('#codigoCidade_inserirgeral').val(json.codigoCidade);
+                                    $('#codigoEstado_inserirgeral').val(json.codigoEstado);
+                                    $('#cep_inserirgeral').val(json.cep);
+                                    $('#bairro_inserirgeral').val(json.bairro);
+                                    $('#endereco_inserirgeral').val(json.endereco);
+                                    $('#endNumero_inserirgeral').val(json.numero);
+                                    $('#municipio_inserirgeral').val(json.municipio);
+                                    $('#pais_inserirgeral').val(json.pais);
+                                    $('#cnae_inserirgeral').val(json.cnae);
+
+                                    $('#verificaPessoaModal').modal('hide');
+                                    $('#inserirGeralModal').modal('show');
+                                }
+                            });
+
+
                         }
 
                     }

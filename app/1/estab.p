@@ -12,7 +12,7 @@ def temp-table ttentrada no-undo serialize-name "estab"   /* JSON ENTRADA */
     field etbcod  like estab.etbcod
     field pagina  AS INT.
 
-{sistema/database/acentos.i}
+/* {sistema/database/acentos.i} */
 
 def temp-table ttestab  no-undo serialize-name "estab"  /* JSON SAIDA */
     FIELD etbcod like estab.etbcod
@@ -40,23 +40,20 @@ then do:
     vetbcod = ttentrada.etbcod.
 end.
 
-IF ttentrada.etbcod <> ? OR (ttentrada.etbcod = ?)
-THEN DO:
-    for each estab where
-        (if vetbcod = ?
-         then true /* TODOS */
-         else estab.etbcod = vetbcod) 
-         no-lock.
-         
-         contador = contador + 1.
-        IF contador > ttentrada.pagina and contador <= varPagina THEN DO:
-            create ttestab.
-            ttestab.etbcod    = estab.etbcod.
-            ttestab.etbnom   = removeacento(estab.etbnom).
-            ttestab.munic   = removeacento(estab.munic).
-        end.
+for each estab where
+    (if vetbcod = ?
+     then true /* TODOS */
+     else estab.etbcod = vetbcod) 
+     no-lock.
+     
+     contador = contador + 1.
+    IF contador > ttentrada.pagina and contador <= varPagina THEN DO:
+        create ttestab.
+        ttestab.etbcod    = estab.etbcod.
+        ttestab.etbnom   = estab.etbnom.
+        ttestab.munic   = estab.munic.
     end.
-END.
+end.
 
 
 find first ttestab no-error.

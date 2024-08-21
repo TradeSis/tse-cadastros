@@ -62,6 +62,7 @@ if (isset($_GET['operacao'])) {
 			'etbcod' => $_POST['etbcod'],
 			'etbnom' => $_POST['etbnom'],
 			'munic' => $_POST['munic'],
+			'supcod' => $_POST['supcod'],
 			'idEmpresa' => $idEmpresa
 		);
 

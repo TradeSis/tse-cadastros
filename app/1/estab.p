@@ -17,7 +17,8 @@ def temp-table ttentrada no-undo serialize-name "estab"   /* JSON ENTRADA */
 def temp-table ttestab  no-undo serialize-name "estab"  /* JSON SAIDA */
     FIELD etbcod like estab.etbcod
     FIELD etbnom like estab.etbnom
-    FIELD munic like estab.munic.
+    FIELD munic like estab.munic
+    FIELD supcod like estab.supcod.
 
 def temp-table ttsaida  no-undo serialize-name "conteudoSaida"  /* JSON SAIDA CASO ERRO */
     field tstatus        as int serialize-name "status"
@@ -52,6 +53,8 @@ for each estab where
         ttestab.etbcod    = estab.etbcod.
         ttestab.etbnom   = estab.etbnom.
         ttestab.munic   = estab.munic.
+        ttestab.supcod   = estab.supcod.
+        
     end.
 end.
 

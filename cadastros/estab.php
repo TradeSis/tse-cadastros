@@ -123,6 +123,10 @@ include_once (__DIR__ . '/../header.php');
                                             <label class="form-label ts-label">munic</label>
                                             <input type="text" class="form-control ts-input" name="munic" id="munic">
                                         </div>
+                                        <div class="col-md">
+                                            <label class="form-label ts-label">supcod</label>
+                                            <input type="text" class="form-control ts-input" name="supcod" id="supcod">
+                                        </div>
                                     </div><!--fim row 1-->
                                 </div>
                             </div>
@@ -233,6 +237,7 @@ include_once (__DIR__ . '/../header.php');
                     $('#etbcod').val(estab.etbcod);
                     $('#etbnom').val(estab.etbnom);
                     $('#munic').val(estab.munic);
+                    $('#supcod').val(estab.supcod);
 
                     $('#alterarEstabModal').modal('show');
                 }

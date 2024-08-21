@@ -10,7 +10,8 @@ def var hsaida   as handle.             /* HANDLE SAIDA */
 def temp-table ttentrada no-undo serialize-name "estab"   /* JSON ENTRADA */
     field etbcod   like estab.etbcod
     field etbnom   like estab.etbnom
-    field munic     like estab.munic.
+    field munic     like estab.munic
+    field supcod     like estab.supcod.
 
 def temp-table ttsaida  no-undo serialize-name "conteudoSaida"  /* JSON SAIDA CASO ERRO */
     field tstatus        as int serialize-name "status"
@@ -51,7 +52,8 @@ end.
 do on error undo:
     find estab where estab.etbcod = ttentrada.etbcod exclusive no-error.
     estab.etbnom = ttentrada.etbnom. 
-    estab.munic = ttentrada.munic. 
+    estab.munic = ttentrada.munic.    
+    estab.supcod = ttentrada.supcod.
 end.
 
 create ttsaida.

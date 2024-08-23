@@ -48,6 +48,8 @@ include_once (__DIR__ . '/../header.php');
                         <th>Cod.</th>
                         <th>Nome</th>
                         <th>Municipio</th>
+                        <th>Cod. Supervisor</th>
+                        <th>Nome Supervisor</th>
                         <th>Ação</th>
                     </tr>
                 </thead>
@@ -110,7 +112,7 @@ include_once (__DIR__ . '/../header.php');
                         <form method="post" id="form-alterarEstab">
                             <div class="row">
                                 <div class="col-md">
-                                    <div class="row mt-3">
+                                    <div class="row">
                                         <div class="col-md-2">
                                             <label class="form-label ts-label">etbcod</label>
                                             <input type="number" class="form-control ts-input" readonly name="etbcod" id="etbcod">
@@ -123,11 +125,17 @@ include_once (__DIR__ . '/../header.php');
                                             <label class="form-label ts-label">munic</label>
                                             <input type="text" class="form-control ts-input" name="munic" id="munic">
                                         </div>
-                                        <div class="col-md">
-                                            <label class="form-label ts-label">supcod</label>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-2">
+                                            <label class="form-label ts-label">Cod. Supervisor</label>
                                             <input type="text" class="form-control ts-input" name="supcod" id="supcod">
                                         </div>
-                                    </div><!--fim row 1-->
+                                        <div class="col-md">
+                                            <label class="form-label ts-label">Nome Supervisor</label>
+                                            <input type="text" class="form-control ts-input" name="supnom" id="supnom">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                     </div><!--body-->
@@ -175,7 +183,7 @@ include_once (__DIR__ . '/../header.php');
                 },
                 async: false,
                 success: function (msg) {
-                    //console.log(msg);
+                    //alert(msg);
                     var json = JSON.parse(msg);
                     var linha = "";
                     for (var $i = 0; $i < json.length; $i++) {
@@ -185,6 +193,8 @@ include_once (__DIR__ . '/../header.php');
                         linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "'>" + object.etbcod + "</td>";
                         linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "'>" + object.etbnom + "</td>";
                         linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "'>" + object.munic + "</td>";
+                        linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "'>" + (object.supcod == 0 ? "" : object.supcod) + "</td>";
+                        linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "'>" + object.supnom + "</td>";
                         linha = linha + "<td>" + "<button type='button' class='btn btn-warning btn-sm' data-bs-toggle='modal' data-bs-target='#alterarEstabModal' data-etbcod='" + object.etbcod + "'><i class='bi bi-pencil-square'></i></button> " + "</td>";
                         linha = linha + "</tr>";
                     }
@@ -237,7 +247,9 @@ include_once (__DIR__ . '/../header.php');
                     $('#etbcod').val(estab.etbcod);
                     $('#etbnom').val(estab.etbnom);
                     $('#munic').val(estab.munic);
-                    $('#supcod').val(estab.supcod);
+                    supcod = (estab.supcod == 0 ? "" : estab.supcod);
+                    $('#supcod').val(supcod);
+                    $('#supnom').val(estab.supnom);
 
                     $('#alterarEstabModal').modal('show');
                 }

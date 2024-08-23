@@ -18,7 +18,8 @@ def temp-table ttestab  no-undo serialize-name "estab"  /* JSON SAIDA */
     FIELD etbcod like estab.etbcod
     FIELD etbnom like estab.etbnom
     FIELD munic like estab.munic
-    FIELD supcod like estab.supcod.
+    FIELD supcod like estab.supcod
+    FIELD supnom LIKE supervisor.supnom.
 
 def temp-table ttsaida  no-undo serialize-name "conteudoSaida"  /* JSON SAIDA CASO ERRO */
     field tstatus        as int serialize-name "status"
@@ -27,6 +28,7 @@ def temp-table ttsaida  no-undo serialize-name "conteudoSaida"  /* JSON SAIDA CA
 def VAR vetbcod like ttentrada.etbcod.
 DEF VAR contador AS INT.
 DEF VAR varPagina AS INT.
+def var vsupnom   as char.
 
 hEntrada = temp-table ttentrada:HANDLE.
 lokJSON = hentrada:READ-JSON("longchar",vlcentrada, "EMPTY") no-error.
@@ -49,11 +51,20 @@ for each estab where
      
      contador = contador + 1.
     IF contador > ttentrada.pagina and contador <= varPagina THEN DO:
+        find supervisor where supervisor.supcod = estab.supcod no-lock no-error.
+        if avail supervisor
+        then do:
+            vsupnom = supervisor.supnom.
+        end.
+        ELSE DO:
+           vsupnom = "".
+        END.
         create ttestab.
         ttestab.etbcod    = estab.etbcod.
         ttestab.etbnom   = estab.etbnom.
         ttestab.munic   = estab.munic.
         ttestab.supcod   = estab.supcod.
+        ttestab.supnom   = vsupnom.
         
     end.
 end.

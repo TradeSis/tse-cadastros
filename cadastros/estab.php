@@ -157,7 +157,7 @@ include_once (__DIR__ . '/../header.php');
     </div>
 
     <!-- MODAIS DE ZOOM -->
-    <?php include ROOT . '/vendas/apoio/zoomsupervisor.php'; ?>
+    <?php include ROOT . '/vendas/zoom/supervisor.php'; ?>
 
     <!-- LOCAL PARA COLOCAR OS JS -->
 

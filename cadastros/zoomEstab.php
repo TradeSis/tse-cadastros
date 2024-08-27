@@ -12,12 +12,10 @@
                     <div class="row justify-content-center">
                         <div class="container">
                             <div class="row">
-                                <div class="col-sm-10 col-9 mt-3">
+                                <div class="col-12 d-flex gap-2">
                                     <input type="text" placeholder="Digite o codigo do estabelecimento"
                                         class="form-control ts-input" id="buscaEstab" name="buscaEstab">
-                                </div>
-                                <div class="col-sm-2 col-3 mt-2">
-                                    <button class="btn btn btn-success" type="button" id="buscar">Buscar</i></button>
+                                        <button class="btn btn btn-success" type="button" id="buscar">Buscar</i></button>
                                 </div>
                             </div>
 
@@ -55,9 +53,10 @@
 
 <?php include_once ROOT . "/vendor/footer_js.php"; ?>
 
-<script>
+<script>  
+    var contrassin = '<?php echo $contrassin ?>';
     var pagina = 0;
-
+    
     $(document).on('click', 'button[data-bs-target="#zoomEstabModal"]', function() {
         buscarEstab($("#buscaEstab").val(), pagina);
     });
@@ -74,7 +73,8 @@
             },
             data: {
                 etbcod: buscaEstab,
-                pagina: pagina
+                pagina: pagina,
+                contrassin: contrassin
             },
             async: false,
             success: function (msg) {
@@ -110,12 +110,12 @@
         });
     }
     $("#buscar").click(function () {
-        buscarEstab($("#buscaEstab").val(), pagina);
+        buscarEstab($("#buscaEstab").val(), 0);
     })
 
     document.addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
-            buscarEstab($("#buscaEstab").val(), pagina);
+            buscarEstab($("#buscaEstab").val(), 0);
         }
     });
 

@@ -60,7 +60,9 @@ include_once (__DIR__ . '/../header.php');
             </table>
         </div>
 
-
+        <!-- botão de modais que ficam escondidos -->
+        <button type="button" class="btn btn-success d-none" data-bs-toggle="modal" data-bs-target="#zoomSupervisorModal" id="abreSupervisorModal"><i class="bi bi-plus-square"></i>&nbsp Novo</button>
+        
         <!--------- INSERIR --------->
         <div class="modal fade bd-example-modal-lg" id="inserirEstabModal" tabindex="-1"
             aria-labelledby="inserirEstabModalLabel" aria-hidden="true">
@@ -127,13 +129,14 @@ include_once (__DIR__ . '/../header.php');
                                         </div>
                                     </div>
                                     <div class="row mt-2">
-                                        <div class="col-md-2">
-                                            <label class="form-label ts-label">Cod. Supervisor</label>
-                                            <input type="text" class="form-control ts-input" name="supcod" id="supcod">
+                                        <label class="form-label ts-label" style="margin-bottom: -17px;">Cod</label>
+                                        <div class="col input-group mb-3 mt-3" style="margin-top: 50px;">
+                                            <input type="text" class="form-control ts-inputcomBtn mt-1" name="supcod" id="supcod">
+                                            <button class="btn btn-outline-secondary ts-acionaZoomSupervisor" type="button" title="Pesquisar Supervisor"><i class="bi bi-search"></i></button>
                                         </div>
-                                        <div class="col-md">
-                                            <label class="form-label ts-label">Nome Supervisor</label>
-                                            <input type="text" class="form-control ts-input" name="supnom" id="supnom">
+                                        <div class="col">
+                                            <label class="form-label ts-label">Nome</label>
+                                            <input type="text" class="form-control ts-input" name="supnom" id="supnom" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -152,6 +155,9 @@ include_once (__DIR__ . '/../header.php');
         <button id="prevPage" class="btn btn-primary mr-2" style="display:none;">Anterior</button>
         <button id="nextPage" class="btn btn-primary" style="display:none;">Proximo</button>
     </div>
+
+    <!-- MODAIS DE ZOOM -->
+    <?php include ROOT . '/vendas/apoio/zoomsupervisor.php'; ?>
 
     <!-- LOCAL PARA COLOCAR OS JS -->
 
@@ -254,6 +260,22 @@ include_once (__DIR__ . '/../header.php');
                     $('#alterarEstabModal').modal('show');
                 }
             });
+        });
+
+         // AÇÂO DE CLICK MODAL SUPERVISOR
+         $(document).on('click', '.ts-acionaZoomSupervisor', function() {
+            const elemento = document.getElementById('abreSupervisorModal');
+            elemento.click()
+        });
+
+        $(document).on('click', '.ts-clickSupervisor', function() {
+            var supcod = $(this).attr("data-supcod");
+            var supnom = $(this).attr("data-supnom");
+
+            $('#supcod').val(supcod);
+            $('#supnom').val(supnom);
+
+            $('#zoomSupervisorModal').modal('hide');
         });
 
 

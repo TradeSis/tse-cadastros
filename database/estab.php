@@ -75,14 +75,19 @@ if (isset($_GET['operacao'])) {
 		$etbcod = isset($_POST["etbcod"])  && $_POST["etbcod"] !== "" && $_POST["etbcod"] !== "null" ? $_POST["etbcod"]  : null;
 		$pagina = isset($_POST["pagina"])  && $_POST["pagina"] !== "" && $_POST["pagina"] !== "null" ? $_POST["pagina"]  : 0;
 		$idEmpresa = isset($_POST["idEmpresa"])  && $_POST["idEmpresa"] !== "" && $_POST["idEmpresa"] !== "null" ? $_POST["idEmpresa"]  : $_SESSION['idEmpresa'];
+		$contrassin = isset($_POST["idEmpresa"])  && $_POST["contrassin"] == "Sim" ? true : false;
 
 		$apiEntrada = 
-		array("estab" =>
-		array(array(
-			'etbcod' => $etbcod,
-			'pagina' => $pagina,
-			'idEmpresa' => $idEmpresa
-		)));
+		array(
+			"dadosEntrada" => array(
+				array(
+					'idEmpresa' => $idEmpresa,
+					'etbcod' => $etbcod,
+					'pagina' => $pagina,
+					'contrassin' => $contrassin
+				)
+			)
+		);
 		$estab = chamaAPI(null, '/cadastros/estab', json_encode($apiEntrada), 'GET');
 
 		echo json_encode($estab);

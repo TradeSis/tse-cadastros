@@ -37,33 +37,23 @@ varPagina = ttentrada.pagina + 10.
 IF ttentrada.etbcod <> ?
 then do:
     find estab where estab.etbcod = ttentrada.etbcod NO-LOCK NO-ERROR.
-    if not avail estab
+    if avail estab
     then do:
-        create ttsaida.
-        ttsaida.tstatus = 400.
-        ttsaida.retorno = "estab nao encontrado".
-
-        hsaida  = temp-table ttsaida:handle.
-
-        lokJson = hsaida:WRITE-JSON("LONGCHAR", vlcSaida, TRUE).
-        message string(vlcSaida).
-        return.
+        find supervisor where supervisor.supcod = estab.supcod no-lock no-error.
+        if avail supervisor
+        then do:
+            vsupnom = supervisor.supnom.
+        end.
+        ELSE DO:
+        vsupnom = "".
+        END.
+        create ttestab.
+        ttestab.etbcod    = estab.etbcod.
+        ttestab.etbnom   = estab.etbnom.
+        ttestab.munic   = estab.munic.
+        ttestab.supcod   = estab.supcod.
+        ttestab.supnom   = vsupnom.
     end.
-
-    find supervisor where supervisor.supcod = estab.supcod no-lock no-error.
-    if avail supervisor
-    then do:
-        vsupnom = supervisor.supnom.
-    end.
-    ELSE DO:
-       vsupnom = "".
-    END.
-    create ttestab.
-    ttestab.etbcod    = estab.etbcod.
-    ttestab.etbnom   = estab.etbnom.
-    ttestab.munic   = estab.munic.
-    ttestab.supcod   = estab.supcod.
-    ttestab.supnom   = vsupnom.
 end. 
 ELSE DO:
     for each estab no-lock.

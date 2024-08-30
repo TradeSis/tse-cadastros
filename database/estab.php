@@ -72,7 +72,8 @@ if (isset($_GET['operacao'])) {
 		);
 
 		$estab = chamaAPI(null, '/cadastros/estab', json_encode($apiEntrada), 'POST');
-
+		echo json_encode($estab);
+		return $estab;
 	}
 
 	if ($operacao == "buscar") {

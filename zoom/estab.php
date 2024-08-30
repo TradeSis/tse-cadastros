@@ -54,14 +54,14 @@
 <?php include_once ROOT . "/vendor/footer_js.php"; ?>
 
 <script>  
-    var pagina = 0;
+    var paginaZoomEstab = 0;
     
     $(document).on('click', 'button[data-bs-target="#zoomEstabModal"]', function() {
-        buscarEstab(null, pagina);
+        buscarEstab(null, 0);
     });
 
 
-    function buscarEstab(buscaEstab, pagina) {
+    function buscarEstab(buscaEstab, paginaZoomEstab) {
      
         $.ajax({
             type: 'POST',
@@ -72,7 +72,7 @@
             },
             data: {
                 etbcod: buscaEstab,
-                pagina: pagina
+                pagina: paginaZoomEstab
             },
             async: false,
             success: function (msg) {
@@ -97,7 +97,7 @@
                     $("#dadosEstab").html(linha);
 
                     $("#prevPage, #nextPage").show();
-                    if (pagina == 0) {
+                    if (paginaZoomEstab == 0) {
                         $("#prevPage").hide();
                     }
                     if (json.length < 10) {
@@ -118,15 +118,15 @@
     });
 
     $("#prevPage").click(function () {
-        if (pagina > 0) {
-            pagina -= 10;
-            buscarEstab($("#buscaEstab").val(), pagina);
+        if (paginaZoomEstab > 0) {
+            paginaZoomEstab -= 10;
+            buscarEstab($("#buscaEstab").val(), paginaZoomEstab);
         }
     });
 
     $("#nextPage").click(function () {
-        pagina += 10;
-        buscarEstab($("#buscaEstab").val(), pagina);
+        paginaZoomEstab += 10;
+        buscarEstab($("#buscaEstab").val(), paginaZoomEstab);
     });
 
 </script>

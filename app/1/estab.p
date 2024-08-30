@@ -10,8 +10,7 @@ def var hsaida   as handle.             /* HANDLE SAIDA */
 
 def temp-table ttentrada no-undo serialize-name "dadosEntrada"   /* JSON ENTRADA */
     field etbcod  like estab.etbcod
-    field pagina  AS INT
-    FIELD contrassin AS LOG. /* contrassin = true*/
+    field pagina  AS INT.
 
 def temp-table ttestab  no-undo serialize-name "estab"  /* JSON SAIDA */
     FIELD etbcod like estab.etbcod
@@ -37,7 +36,19 @@ varPagina = ttentrada.pagina + 10.
 
 IF ttentrada.etbcod <> ?
 then do:
-    find estab where estab.etbcod = ttentrada.etbcod no-lock.
+    find estab where estab.etbcod = ttentrada.etbcod NO-LOCK NO-ERROR.
+    if not avail estab
+    then do:
+        create ttsaida.
+        ttsaida.tstatus = 400.
+        ttsaida.retorno = "estab nao encontrado".
+
+        hsaida  = temp-table ttsaida:handle.
+
+        lokJson = hsaida:WRITE-JSON("LONGCHAR", vlcSaida, TRUE).
+        message string(vlcSaida).
+        return.
+    end.
 
     find supervisor where supervisor.supcod = estab.supcod no-lock no-error.
     if avail supervisor

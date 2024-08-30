@@ -49,6 +49,20 @@ then do:
     return.
 end.
 
+find supervisor where supervisor.supcod = ttentrada.supcod no-lock no-error.
+if not avail supervisor
+then do:
+    create ttsaida.
+    ttsaida.tstatus = 400.
+    ttsaida.descricaoStatus = "supervisor nao encontrado".
+
+    hsaida  = temp-table ttsaida:handle.
+
+    lokJson = hsaida:WRITE-JSON("LONGCHAR", vlcSaida, TRUE).
+    message string(vlcSaida).
+    return.
+end.
+
 do on error undo:
     find estab where estab.etbcod = ttentrada.etbcod exclusive no-error.
     estab.etbnom = ttentrada.etbnom. 

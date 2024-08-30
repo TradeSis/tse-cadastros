@@ -24,7 +24,6 @@ def temp-table ttsaida  no-undo serialize-name "conteudoSaida"  /* JSON SAIDA CA
     field tstatus        as int serialize-name "status"
     field retorno      as char.
 
-def VAR vetbcod like ttentrada.etbcod.
 DEF VAR contador AS INT.
 DEF VAR varPagina AS INT.
 def var vsupnom   as char.
@@ -36,19 +35,27 @@ find first ttentrada no-error.
 contador = 0.
 varPagina = ttentrada.pagina + 10.
 
-vetbcod = ?.
-if avail ttentrada
+IF ttentrada.etbcod <> ?
 then do:
-    vetbcod = ttentrada.etbcod.
-end.
+    find estab where estab.etbcod = ttentrada.etbcod no-lock.
 
-IF ttentrada.contrassin = FALSE
-THEN DO:
-     for each estab where
-        (if vetbcod = ?
-         then true /* TODOS */
-         else estab.etbcod = vetbcod) 
-         no-lock.
+    find supervisor where supervisor.supcod = estab.supcod no-lock no-error.
+    if avail supervisor
+    then do:
+        vsupnom = supervisor.supnom.
+    end.
+    ELSE DO:
+       vsupnom = "".
+    END.
+    create ttestab.
+    ttestab.etbcod    = estab.etbcod.
+    ttestab.etbnom   = estab.etbnom.
+    ttestab.munic   = estab.munic.
+    ttestab.supcod   = estab.supcod.
+    ttestab.supnom   = vsupnom.
+end. 
+ELSE DO:
+    for each estab no-lock.
          
          contador = contador + 1.
         IF contador > ttentrada.pagina and contador <= varPagina THEN DO:
@@ -65,41 +72,14 @@ THEN DO:
             ttestab.etbnom   = estab.etbnom.
             ttestab.munic   = estab.munic.
             ttestab.supcod   = estab.supcod.
-            ttestab.supnom   = vsupnom.
+            ttestab.supnom   = vsupnom.  
             
         end.
     end.
 END.
-
-IF ttentrada.contrassin = TRUE
-THEN DO:
-      for each contrassin where
-        (if vetbcod = ?
-         then true /* TODOS */
-         else contrassin.etbcod = vetbcod) 
-         no-lock.
-         
-         contador = contador + 1.
-         IF contador > ttentrada.pagina and contador <= varPagina THEN DO:
-            
-            find first ttestab where ttestab.etbcod = contrassin.etbcod no-lock no-error.
-            if not avail ttestab then do:
-                create ttestab.
-                ttestab.etbcod    = contrassin.etbcod.
-
-                find estab where estab.etbcod = contrassin.etbcod no-lock no-error.
-                if avail estab then
-                    ttestab.etbnom   = estab.etbnom.
-                    ttestab.munic   = estab.munic.
-            end.
-
-        end.
-    end.
-END.
-
+ 
 
 find first ttestab no-error.
-
 if not avail ttestab
 then do:
     create ttsaida.

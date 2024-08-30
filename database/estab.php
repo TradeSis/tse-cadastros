@@ -7,6 +7,11 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include_once __DIR__ . "/../conexao.php";
 
+$idEmpresa = null;
+if (isset($_SESSION['idEmpresa'])) {
+	$idEmpresa = $_SESSION['idEmpresa'];
+}
+
 function buscaEstabelecimento($etbcod = null, $pagina = null)
 {
 
@@ -74,17 +79,14 @@ if (isset($_GET['operacao'])) {
 
 		$etbcod = isset($_POST["etbcod"])  && $_POST["etbcod"] !== "" && $_POST["etbcod"] !== "null" ? $_POST["etbcod"]  : null;
 		$pagina = isset($_POST["pagina"])  && $_POST["pagina"] !== "" && $_POST["pagina"] !== "null" ? $_POST["pagina"]  : 0;
-		$idEmpresa = isset($_POST["idEmpresa"])  && $_POST["idEmpresa"] !== "" && $_POST["idEmpresa"] !== "null" ? $_POST["idEmpresa"]  : $_SESSION['idEmpresa'];
-		$contrassin = isset($_POST["idEmpresa"])  && $_POST["contrassin"] == "Sim" ? true : false;
-
+	
 		$apiEntrada = 
 		array(
 			"dadosEntrada" => array(
 				array(
 					'idEmpresa' => $idEmpresa,
 					'etbcod' => $etbcod,
-					'pagina' => $pagina,
-					'contrassin' => $contrassin
+					'pagina' => $pagina
 				)
 			)
 		);
@@ -93,7 +95,6 @@ if (isset($_GET['operacao'])) {
 		echo json_encode($estab);
 		return $estab;
 	}
-
 
 	header('Location: ../cadastros/estab.php');
 

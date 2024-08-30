@@ -54,11 +54,10 @@
 <?php include_once ROOT . "/vendor/footer_js.php"; ?>
 
 <script>  
-    var contrassin = '<?php echo $contrassin ?>';
     var pagina = 0;
     
     $(document).on('click', 'button[data-bs-target="#zoomEstabModal"]', function() {
-        buscarEstab($("#buscaEstab").val(), pagina);
+        buscarEstab(null, pagina);
     });
 
 
@@ -73,8 +72,7 @@
             },
             data: {
                 etbcod: buscaEstab,
-                pagina: pagina,
-                contrassin: contrassin
+                pagina: pagina
             },
             async: false,
             success: function (msg) {

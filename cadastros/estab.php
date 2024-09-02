@@ -217,11 +217,13 @@ include_once (__DIR__ . '/../header.php');
             });
         }
         $("#buscar").click(function () {
+            pagina = 0;
             buscar($("#buscaEstab").val(), pagina);
         })
 
         document.addEventListener("keypress", function (e) {
             if (e.key === "Enter") {
+                pagina  0;
                 buscar($("#buscaEstab").val(), pagina);
             }
         });

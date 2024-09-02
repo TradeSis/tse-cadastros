@@ -58,8 +58,10 @@ end.
 ELSE DO:
     for each estab no-lock.
          
-         contador = contador + 1.
-        IF contador > ttentrada.pagina and contador <= varPagina THEN DO:
+        contador = contador + 1.
+        if contador <= ttentrada.pagina THEN NEXT.
+        if contador > varPagina         THEN LEAVE.
+        
             find supervisor where supervisor.supcod = estab.supcod no-lock no-error.
             if avail supervisor
             then do:
@@ -75,7 +77,6 @@ ELSE DO:
             ttestab.supcod   = estab.supcod.
             ttestab.supnom   = vsupnom.  
             
-        end.
     end.
 END.
  

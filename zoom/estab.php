@@ -108,11 +108,13 @@
         });
     }
     $("#buscar").click(function () {
+        paginaZoomEstab = 0;
         buscarEstab($("#buscaEstab").val(), 0);
     })
 
     document.addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
+            paginaZoomEstab = 0;
             buscarEstab($("#buscaEstab").val(), 0);
         }
     });

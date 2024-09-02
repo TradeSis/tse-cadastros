@@ -23,8 +23,7 @@ if (isset($LOG_NIVEL)) {
 }
 //LOG
 
-$estab = array();
-
+$dados = array();
 
 $progr = new chamaprogress();
 
@@ -35,17 +34,21 @@ if (isset($jsonEntrada['idEmpresa'])) {
 
 $retorno = $progr->executarprogress("cadastros/app/1/estab", json_encode($jsonEntrada));
 fwrite($arquivo, $identificacao . "-RETORNO->" . $retorno . "\n");
-$estab = json_decode($retorno, true);
-if (isset($estab["conteudoSaida"][0])) { // Conteudo Saida - Caso de erro
-    $estab = $estab["conteudoSaida"][0];
+$dados = json_decode($retorno, true);
+if (isset($dados["conteudoSaida"][0])) { // Conteudo Saida - Caso de erro
+    $dados = $dados["conteudoSaida"][0];
 } else {
-
-    $estab = $estab["estab"];
+    if((!isset($jsonEntrada['dadosEntrada'][0])) && ($jsonEntrada['dadosEntrada'][0]['etbcod'] != null)){
+        $dados = $dados['estab'][0];
+    }else{
+        $dados = $dados["estab"];
+    }
 
 }
 
 
-$jsonSaida = $estab;
+
+$jsonSaida = $dados;
 
 
 //LOG

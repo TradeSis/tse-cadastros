@@ -43,12 +43,16 @@ if (isset($_GET['operacao'])) {
 			$idEmpresa = $_SESSION['idEmpresa'];
 		}
 
-		$apiEntrada =
+		$apiEntrada = 
 		array(
-			'etbcod' => $_POST['etbcod'],
-			'etbnom' => $_POST['etbnom'],
-			'munic' => $_POST['munic'],
-			'idEmpresa' => $idEmpresa
+			"estab" => array(
+				array(
+					'etbcod' => $_POST['etbcod'],
+					'etbnom' => $_POST['etbnom'],
+					'munic' => $_POST['munic'],
+					'idEmpresa' => $idEmpresa
+				)
+			)
 		);
 
 		$estab = chamaAPI(null, '/cadastros/estab', json_encode($apiEntrada), 'PUT');
@@ -62,13 +66,17 @@ if (isset($_GET['operacao'])) {
 			$idEmpresa = $_SESSION['idEmpresa'];
 		}
 
-		$apiEntrada =
+		$apiEntrada = 
 		array(
-			'etbcod' => $_POST['etbcod'],
-			'etbnom' => $_POST['etbnom'],
-			'munic' => $_POST['munic'],
-			'supcod' => $_POST['supcod'],
-			'idEmpresa' => $idEmpresa
+			"estab" => array(
+				array(
+					'etbcod' => $_POST['etbcod'],
+					'etbnom' => $_POST['etbnom'],
+					'munic' => $_POST['munic'],
+					'supcod' => $_POST['supcod'],
+					'idEmpresa' => $idEmpresa
+				)
+			)
 		);
 
 		$estab = chamaAPI(null, '/cadastros/estab', json_encode($apiEntrada), 'POST');

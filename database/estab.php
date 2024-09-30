@@ -20,13 +20,16 @@ function buscaEstabelecimento($etbcod = null, $pagina = null)
 	if (isset($_SESSION['idEmpresa'])) {
     	$idEmpresa = $_SESSION['idEmpresa'];
 	}
-	$apiEntrada =
-		array("estab" =>
-		array(array(
-			'etbcod' => $etbcod,
-			'pagina' => $pagina,
-			'idEmpresa' => $idEmpresa
-		)));
+	$apiEntrada = 
+		array(
+			"dadosEntrada" => array(
+				array(
+					'idEmpresa' => $idEmpresa,
+					'etbcod' => $etbcod,
+					'pagina' => $pagina
+				)
+			)
+		);
 	$estab = chamaAPI(null, '/cadastros/estab', json_encode($apiEntrada), 'GET');
 	return $estab;
 }

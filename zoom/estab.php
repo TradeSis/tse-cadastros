@@ -55,8 +55,10 @@
 
 <script>  
     var paginaZoomEstab = 0;
-    
-    $(document).on('click', 'button[data-bs-target="#zoomEstabModal"]', function() {
+
+    $(document).on('click', '.ts-acionaZoomEstab', function() {
+        event.preventDefault(); 
+        $("#zoomEstabModal").modal('show');
         buscarEstab(null, 0);
     });
 

@@ -47,16 +47,22 @@ if (
                             $tab = $_GET['tab'];
                         }
                         ?>
-                        <?php if ($_SESSION['nivelMenu'] >= 2) {
+                        <?php if ($_SESSION['nivelMenu'] >= 1) {
                             if ($tab == '') {
-                                $tab = 'clientes';
+                                $tab = 'estab';
                             } ?>
+                            <li class="nav-item mr-1">
+                                <a class="nav-link <?php if ($tab == "estab") {echo " active ";} ?>" 
+                                href="?tab=estab" role="tab">Estabelecimentos</a>
+                            </li>
+                        <?php }
+                        if ($_SESSION['nivelMenu'] >= 2) { ?>
                             <li class="nav-item mr-1">
                                 <a class="nav-link 
                                 <?php if ($tab == "clientes") {echo " active ";} ?>" 
                                 href="?tab=clientes" role="tab">Clientes</a>
                             </li>
-                        <?php }
+                            <?php }
                         if ($_SESSION['nivelMenu'] >= 2) { ?>
                             <li class="nav-item mr-1">
                                 <a class="nav-link <?php if ($tab == "produtos") {echo " active ";} ?>"
@@ -87,12 +93,6 @@ if (
                                 href="?tab=grupoproduto" role="tab">Grupo Produto</a>
                             </li>
                         <?php }
-                        if ($_SESSION['nivelMenu'] >= 2) { ?>
-                            <li class="nav-item mr-1">
-                                <a class="nav-link <?php if ($tab == "estab") {echo " active ";} ?>" 
-                                href="?tab=estab" role="tab">Estabelecimentos</a>
-                            </li>
-                        <?php }
                         if ($_SESSION['nivelMenu'] >= 4) { ?>
                             <li class="nav-item mr-1">
                                 <a class="nav-link <?php if ($tab == "configuracao") {echo " active ";} ?>" 
@@ -112,7 +112,12 @@ if (
                     } ?>
                     <select class="form-select mt-2 ts-selectSubMenuAplicativos" id="subtabCadastros">
 
-                        <?php if ($_SESSION['nivelMenu'] >= 2) { ?>
+                        <?php if ($_SESSION['nivelMenu'] >= 1) { ?>
+                        <option value="<?php echo URLROOT ?>/admin/?tab=estab" 
+                        <?php if ($getTab == "estab") {echo " selected ";} ?>>Estabelecimentos</option>
+                        <?php }
+
+                        if ($_SESSION['nivelMenu'] >= 2) { ?>
                         <option value="<?php echo URLROOT ?>/cadastros/?tab=clientes" 
                         <?php if ($getTab == "clientes") {echo " selected ";} ?>>Clientes</option>
                         <?php }
@@ -142,11 +147,6 @@ if (
                         <?php if ($getTab == "grupoproduto") {echo " selected ";} ?>>Grupo Produto</option>
                         <?php }
 
-                        if ($_SESSION['nivelMenu'] >= 2) { ?>
-                        <option value="<?php echo URLROOT ?>/admin/?tab=estab" 
-                        <?php if ($getTab == "estab") {echo " selected ";} ?>>Estabelecimentos</option>
-                        <?php }
-
                         if ($_SESSION['nivelMenu'] >= 4) { ?>
                         <option value="<?php echo URLROOT ?>/cadastros/?tab=configuracao" 
                         <?php if ($getTab == "configuracao") {echo " selected ";} ?>>Configurações</option>
@@ -162,7 +162,9 @@ if (
 
             <?php
             $src = "";
-
+            if ($tab == "estab") {
+                $src = "cadastros/estab.php";
+            }
             if ($tab == "clientes") {
                 $src = "cadastros/clientes.php";
             }
@@ -180,9 +182,6 @@ if (
             }
             if ($tab == "grupoproduto") {
                 $src = "geral/grupoproduto.php";
-            }
-            if ($tab == "estab") {
-                $src = "cadastros/estab.php";
             }
             if ($tab == "configuracao") {
                 $src = "configuracao/";

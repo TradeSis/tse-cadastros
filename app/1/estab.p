@@ -8,24 +8,24 @@ def var hentrada as handle.             /* HANDLE ENTRADA */
 def var hsaida   as handle.             /* HANDLE SAIDA */
 
 
-def temp-table ttentrada no-undo serialize-name "estab"   /* JSON ENTRADA */
+def temp-table ttentrada no-undo serialize-name "dadosEntrada"   /* JSON ENTRADA */
     field etbcod  like estab.etbcod
     field pagina  AS INT.
-
-/* {sistema/database/acentos.i} */
 
 def temp-table ttestab  no-undo serialize-name "estab"  /* JSON SAIDA */
     FIELD etbcod like estab.etbcod
     FIELD etbnom like estab.etbnom
-    FIELD munic like estab.munic.
+    FIELD munic like estab.munic
+    FIELD supcod like estab.supcod
+    FIELD supnom LIKE supervisor.supnom.
 
 def temp-table ttsaida  no-undo serialize-name "conteudoSaida"  /* JSON SAIDA CASO ERRO */
     field tstatus        as int serialize-name "status"
     field retorno      as char.
 
-def VAR vetbcod like ttentrada.etbcod.
 DEF VAR contador AS INT.
 DEF VAR varPagina AS INT.
+def var vsupnom   as char.
 
 hEntrada = temp-table ttentrada:HANDLE.
 lokJSON = hentrada:READ-JSON("longchar",vlcentrada, "EMPTY") no-error.
@@ -34,30 +34,54 @@ find first ttentrada no-error.
 contador = 0.
 varPagina = ttentrada.pagina + 10.
 
-vetbcod = ?.
-if avail ttentrada
+IF ttentrada.etbcod <> ?
 then do:
-    vetbcod = ttentrada.etbcod.
-end.
-
-for each estab where
-    (if vetbcod = ?
-     then true /* TODOS */
-     else estab.etbcod = vetbcod) 
-     no-lock.
-     
-     contador = contador + 1.
-    IF contador > ttentrada.pagina and contador <= varPagina THEN DO:
+    find estab where estab.etbcod = ttentrada.etbcod NO-LOCK NO-ERROR.
+    if avail estab
+    then do:
+        find supervisor where supervisor.supcod = estab.supcod no-lock no-error.
+        if avail supervisor
+        then do:
+            vsupnom = supervisor.supnom.
+        end.
+        ELSE DO:
+        vsupnom = "".
+        END.
         create ttestab.
         ttestab.etbcod    = estab.etbcod.
         ttestab.etbnom   = estab.etbnom.
         ttestab.munic   = estab.munic.
+        ttestab.supcod   = estab.supcod.
+        ttestab.supnom   = vsupnom.
     end.
-end.
-
+end. 
+ELSE DO:
+    for each estab no-lock.
+         
+        contador = contador + 1.
+        if contador <= ttentrada.pagina THEN NEXT.
+        if contador > varPagina         THEN LEAVE.
+        
+            find supervisor where supervisor.supcod = estab.supcod no-lock no-error.
+            if avail supervisor
+            then do:
+                vsupnom = supervisor.supnom.
+            end.
+            ELSE DO:
+               vsupnom = "".
+            END.
+            create ttestab.
+            ttestab.etbcod    = estab.etbcod.
+            ttestab.etbnom   = estab.etbnom.
+            ttestab.munic   = estab.munic.
+            ttestab.supcod   = estab.supcod.
+            ttestab.supnom   = vsupnom.  
+            
+    end.
+END.
+ 
 
 find first ttestab no-error.
-
 if not avail ttestab
 then do:
     create ttsaida.

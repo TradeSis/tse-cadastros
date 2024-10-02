@@ -48,6 +48,8 @@ include_once (__DIR__ . '/../header.php');
                         <th>Cod.</th>
                         <th>Nome</th>
                         <th>Municipio</th>
+                        <th>Cod. Supervisor</th>
+                        <th>Nome Supervisor</th>
                         <th>Ação</th>
                     </tr>
                 </thead>
@@ -58,7 +60,9 @@ include_once (__DIR__ . '/../header.php');
             </table>
         </div>
 
-
+        <!-- botão de modais que ficam escondidos -->
+        <button type="button" class="btn btn-success d-none" data-bs-toggle="modal" data-bs-target="#zoomSupervisorModal" id="abreSupervisorModal"><i class="bi bi-plus-square"></i>&nbsp Novo</button>
+        
         <!--------- INSERIR --------->
         <div class="modal fade bd-example-modal-lg" id="inserirEstabModal" tabindex="-1"
             aria-labelledby="inserirEstabModalLabel" aria-hidden="true">
@@ -110,7 +114,7 @@ include_once (__DIR__ . '/../header.php');
                         <form method="post" id="form-alterarEstab">
                             <div class="row">
                                 <div class="col-md">
-                                    <div class="row mt-3">
+                                    <div class="row">
                                         <div class="col-md-2">
                                             <label class="form-label ts-label">etbcod</label>
                                             <input type="number" class="form-control ts-input" readonly name="etbcod" id="etbcod">
@@ -123,7 +127,18 @@ include_once (__DIR__ . '/../header.php');
                                             <label class="form-label ts-label">munic</label>
                                             <input type="text" class="form-control ts-input" name="munic" id="munic">
                                         </div>
-                                    </div><!--fim row 1-->
+                                    </div>
+                                    <div class="row mt-2">
+                                        <label class="form-label ts-label" style="margin-bottom: -17px;">Cod</label>
+                                        <div class="col input-group mb-3 mt-3" style="margin-top: 50px;">
+                                            <input type="text" class="form-control ts-inputcomBtn mt-1" name="supcod" id="supcod">
+                                            <button class="btn btn-outline-secondary ts-acionaZoomSupervisor" type="button" title="Pesquisar Supervisor"><i class="bi bi-search"></i></button>
+                                        </div>
+                                        <div class="col">
+                                            <label class="form-label ts-label">Nome</label>
+                                            <input type="text" class="form-control ts-input" name="supnom" id="supnom" disabled>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                     </div><!--body-->
@@ -140,6 +155,9 @@ include_once (__DIR__ . '/../header.php');
         <button id="prevPage" class="btn btn-primary mr-2" style="display:none;">Anterior</button>
         <button id="nextPage" class="btn btn-primary" style="display:none;">Proximo</button>
     </div>
+
+    <!-- MODAIS DE ZOOM -->
+    <?php include ROOT . '/vendas/zoom/supervisor.php'; ?>
 
     <!-- LOCAL PARA COLOCAR OS JS -->
 
@@ -171,7 +189,7 @@ include_once (__DIR__ . '/../header.php');
                 },
                 async: false,
                 success: function (msg) {
-                    //console.log(msg);
+                    //alert(msg);
                     var json = JSON.parse(msg);
                     var linha = "";
                     for (var $i = 0; $i < json.length; $i++) {
@@ -181,6 +199,8 @@ include_once (__DIR__ . '/../header.php');
                         linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "'>" + object.etbcod + "</td>";
                         linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "'>" + object.etbnom + "</td>";
                         linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "'>" + object.munic + "</td>";
+                        linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "'>" + (object.supcod == 0 ? "" : object.supcod) + "</td>";
+                        linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "'>" + object.supnom + "</td>";
                         linha = linha + "<td>" + "<button type='button' class='btn btn-warning btn-sm' data-bs-toggle='modal' data-bs-target='#alterarEstabModal' data-etbcod='" + object.etbcod + "'><i class='bi bi-pencil-square'></i></button> " + "</td>";
                         linha = linha + "</tr>";
                     }
@@ -197,11 +217,13 @@ include_once (__DIR__ . '/../header.php');
             });
         }
         $("#buscar").click(function () {
+            pagina = 0;
             buscar($("#buscaEstab").val(), pagina);
         })
 
         document.addEventListener("keypress", function (e) {
             if (e.key === "Enter") {
+                pagina = 0;
                 buscar($("#buscaEstab").val(), pagina);
             }
         });
@@ -233,10 +255,29 @@ include_once (__DIR__ . '/../header.php');
                     $('#etbcod').val(estab.etbcod);
                     $('#etbnom').val(estab.etbnom);
                     $('#munic').val(estab.munic);
+                    supcod = (estab.supcod == 0 ? "" : estab.supcod);
+                    $('#supcod').val(supcod);
+                    $('#supnom').val(estab.supnom);
 
                     $('#alterarEstabModal').modal('show');
                 }
             });
+        });
+
+         // AÇÂO DE CLICK MODAL SUPERVISOR
+         $(document).on('click', '.ts-acionaZoomSupervisor', function() {
+            const elemento = document.getElementById('abreSupervisorModal');
+            elemento.click()
+        });
+
+        $(document).on('click', '.ts-clickSupervisor', function() {
+            var supcod = $(this).attr("data-supcod");
+            var supnom = $(this).attr("data-supnom");
+
+            $('#supcod').val(supcod);
+            $('#supnom').val(supnom);
+
+            $('#zoomSupervisorModal').modal('hide');
         });
 
 
@@ -263,7 +304,14 @@ include_once (__DIR__ . '/../header.php');
                     data: formData,
                     processData: false,
                     contentType: false,
-                    success: refreshPage,
+                    success: function(data) {
+                    var json = JSON.parse(data);
+                    if (json['status'] == 400) {
+                        alert(json['descricaoStatus'])
+                    } else {
+                        refreshPage()
+                    }
+                }
                 });
             });
 

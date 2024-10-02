@@ -24,44 +24,36 @@ if (isset($LOG_NIVEL)) {
 }
 //LOG
 
-if (isset($jsonEntrada['etbcod'])) {
 
-    try {
+try {
 
-        $progr = new chamaprogress();
-        
-        // PASSANDO idEmpresa PARA PROGRESS
-        if (isset($jsonEntrada['idEmpresa'])) {
-            $progr->setempresa($jsonEntrada['idEmpresa']);
-        }
-
-        $retorno = $progr->executarprogress("cadastros/app/1/estab_inserir",json_encode($jsonEntrada));
-        fwrite($arquivo,$identificacao."-RETORNO->".$retorno."\n");
-        $conteudoSaida = json_decode($retorno,true);
-        if (isset($conteudoSaida["conteudoSaida"][0])) { // Conteudo Saida - Caso de erro
-            $jsonSaida = $conteudoSaida["conteudoSaida"][0];
-        } 
-    } 
-    catch (Exception $e) {
-        $jsonSaida = array(
-            "status" => 500,
-            "retorno" => $e->getMessage()
-        );
-        if ($LOG_NIVEL >= 1) {
-            fwrite($arquivo, $identificacao . "-ERRO->" . $e->getMessage() . "\n");
-        }
-    } finally {
-        // ACAO EM CASO DE ERRO (CATCH), que mesmo assim precise
+    $progr = new chamaprogress();
+    
+    // PASSANDO idEmpresa PARA PROGRESS
+    if (isset($jsonEntrada['idEmpresa'])) {
+        $progr->setempresa($jsonEntrada['idEmpresa']);
     }
-    //TRY-CATCH
 
-
-} else {
+    $retorno = $progr->executarprogress("cadastros/app/1/estab_inserir",json_encode($jsonEntrada));
+    fwrite($arquivo,$identificacao."-RETORNO->".$retorno."\n");
+    $conteudoSaida = json_decode($retorno,true);
+    if (isset($conteudoSaida["conteudoSaida"][0])) { // Conteudo Saida - Caso de erro
+        $jsonSaida = $conteudoSaida["conteudoSaida"][0];
+    } 
+} 
+catch (Exception $e) {
     $jsonSaida = array(
-        "status" => 400,
-        "retorno" => "Faltaram parametros"
+        "status" => 500,
+        "retorno" => $e->getMessage()
     );
+    if ($LOG_NIVEL >= 1) {
+        fwrite($arquivo, $identificacao . "-ERRO->" . $e->getMessage() . "\n");
+    }
+} finally {
+    // ACAO EM CASO DE ERRO (CATCH), que mesmo assim precise
 }
+//TRY-CATCH
+
 
 
 //LOG

@@ -57,7 +57,7 @@ IF ttentrada.etbcod <> ? THEN DO:
     END.
 END.
 ELSE DO:
-    open query q-leitura for each estab where estab.etbcod no-lock.
+    open query q-leitura for each estab no-lock.
 
     IF vrecatu <> ? THEN DO:
         reposition q-leitura to recid vrecatu no-error.

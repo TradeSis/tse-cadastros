@@ -54,27 +54,26 @@
 <?php include_once ROOT . "/vendor/footer_js.php"; ?>
 
 <script>  
-    var paginaZoomEstab = 0;
+    var prirecatu = null;
+    var ultrecatu = null;
 
     $(document).on('click', '.ts-acionaZoomEstab', function() {
         event.preventDefault(); 
         $("#zoomEstabModal").modal('show');
-        buscarEstab(null, 0);
+        buscarEstab(null, null, null);
     });
 
 
-    function buscarEstab(buscaEstab, paginaZoomEstab) {
+    function buscarEstab(buscaEstab, recatuParam, acao) {
      
         $.ajax({
             type: 'POST',
             dataType: 'html',
             url: "<?php echo URLROOT ?>/cadastros/database/estab.php?operacao=buscar",
-            beforeSend: function () {
-                $("#dadosEstab").html("Carregando...");
-            },
             data: {
                 etbcod: buscaEstab,
-                pagina: paginaZoomEstab
+                recatu: recatuParam,
+                acao: acao
             },
             async: false,
             success: function (msg) {
@@ -82,55 +81,64 @@
                 var json = JSON.parse(msg);
                 var linha = "";
                 if (json === null) {
-                        $("#dadosEstab").html("Erro ao buscar");
-                } 
+                    $("#dadosEstab").html("Erro ao buscar");
+                    return;
+                }
+
                 if (json.status === 400) {
-                        $("#dadosEstab").html("Nenhum estabelecimento foi encontrado");
-                } else {
-                    for (var $i = 0; $i < json.length; $i++) {
-                        var object = json[$i];
+                    alert("Nenhum estabelecimento foi encontrado");
+                    $("#nextPage").hide();
+                    return;
+                }
 
-                        linha = linha + "<tr>";
-                        linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "' data-munic='" + object.munic + "'>" + object.etbcod + "</td>";
-                        linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "' data-munic='" + object.munic + "'>" + object.etbnom + "</td>";
-                        linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "' data-munic='" + object.munic + "'>" + object.munic + "</td>";
-                        linha = linha + "</tr>";
-                    }
-                    $("#dadosEstab").html(linha);
+                for (var $i = 0; $i < json.length; $i++) {
+                    var object = json[$i];
 
-                    $("#prevPage, #nextPage").show();
-                    if (paginaZoomEstab == 0) {
+                    linha = linha + "<tr>";
+                    linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "' data-munic='" + object.munic + "'>" + object.etbcod + "</td>";
+                    linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "' data-munic='" + object.munic + "'>" + object.etbnom + "</td>";
+                    linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "' data-munic='" + object.munic + "'>" + object.munic + "</td>";
+                    linha = linha + "</tr>";
+                }
+                $("#dadosEstab").html(linha);
+
+                $("#prevPage, #nextPage").show();
+                if (recatuParam == null) {
+                    $("#prevPage").hide();
+                }
+                if (json.length < 10) {
+                    $("#nextPage").hide();
+                }
+
+                if (json.length > 0) {
+                    prirecatu = json[0].recatu;
+                    ultrecatu = json[json.length - 1].recatu;
+                    if (json[0].etbcod == 1) {
+                        prirecatu = null;
                         $("#prevPage").hide();
-                    }
-                    if (json.length < 10) {
-                        $("#nextPage").hide();
                     }
                 }
             }
         });
     }
     $("#buscar").click(function () {
-        paginaZoomEstab = 0;
-        buscarEstab($("#buscaEstab").val(), 0);
+        recatu = null;
+        buscarEstab($("#buscaEstab").val(), null, null);
     })
 
     document.addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
-            paginaZoomEstab = 0;
-            buscarEstab($("#buscaEstab").val(), 0);
+            recatu = null;
+            buscarEstab($("#buscaEstab").val(), null, null);
         }
     });
 
     $("#prevPage").click(function () {
-        if (paginaZoomEstab > 0) {
-            paginaZoomEstab -= 10;
-            buscarEstab($("#buscaEstab").val(), paginaZoomEstab);
-        }
+        buscarEstab($("#buscaEstab").val(), prirecatu, "prev");
     });
 
     $("#nextPage").click(function () {
-        paginaZoomEstab += 10;
-        buscarEstab($("#buscaEstab").val(), paginaZoomEstab);
+        buscarEstab($("#buscaEstab").val(), ultrecatu, "next");
     });
 
 </script>

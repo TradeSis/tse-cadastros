@@ -90,7 +90,8 @@ if (isset($_GET['operacao'])) {
 	if ($operacao == "buscar") {
 
 		$etbcod = isset($_POST["etbcod"])  && $_POST["etbcod"] !== "" && $_POST["etbcod"] !== "null" ? $_POST["etbcod"]  : null;
-		$pagina = isset($_POST["pagina"])  && $_POST["pagina"] !== "" && $_POST["pagina"] !== "null" ? $_POST["pagina"]  : 0;
+		$recatu = isset($_POST["recatu"])  && $_POST["recatu"] !== "" && $_POST["recatu"] !== "null" ? $_POST["recatu"]  : null;
+		$acao = isset($_POST["acao"])  && $_POST["acao"] !== "" && $_POST["acao"] !== "null" ? $_POST["acao"]  : "next";
 	
 		$apiEntrada = 
 		array(
@@ -98,7 +99,8 @@ if (isset($_GET['operacao'])) {
 				array(
 					'idEmpresa' => $idEmpresa,
 					'etbcod' => $etbcod,
-					'pagina' => $pagina
+					'recatu' => $recatu,
+					'acao' => $acao
 				)
 			)
 		);

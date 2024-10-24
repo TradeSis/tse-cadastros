@@ -10,8 +10,9 @@ def var hsaida   as handle.             /* HANDLE SAIDA */
 
 def temp-table ttentrada no-undo serialize-name "dadosEntrada"   /* JSON ENTRADA */
     field etbcod  like estab.etbcod
-    field recatu  AS recid
-    field acao  AS char.
+    field linha  AS int
+    field qtd  AS int
+    field botao  AS char.
 
 def temp-table ttestab  no-undo serialize-name "estab"  /* JSON SAIDA */
     FIELD etbcod like estab.etbcod
@@ -19,8 +20,7 @@ def temp-table ttestab  no-undo serialize-name "estab"  /* JSON SAIDA */
     FIELD munic like estab.munic
     FIELD supcod like estab.supcod
     FIELD supnom LIKE supervisor.supnom
-    FIELD recatu  AS recid 
-    index estab is unique primary etbcod asc.
+    FIELD linha  AS int.
 
 def temp-table ttsaida  no-undo serialize-name "conteudoSaida"  /* JSON SAIDA CASO ERRO */
     field tstatus        as int serialize-name "status"
@@ -29,72 +29,72 @@ def temp-table ttsaida  no-undo serialize-name "conteudoSaida"  /* JSON SAIDA CA
 def var vsupnom   as char.
 
 def query q-leitura for estab scrolling.
-def var vrecatu as recid.
+def var vlinha as int.
 def var vqtd as int.
 
 hEntrada = temp-table ttentrada:HANDLE.
 lokJSON = hentrada:READ-JSON("longchar",vlcentrada, "EMPTY") no-error.
 find first ttentrada no-error.
 
-vrecatu = ttentrada.recatu.
-vqtd = 10.
+vlinha = ttentrada.linha.
+vqtd = ttentrada.qtd.
+
 
 IF ttentrada.etbcod <> ? THEN DO:
-    find estab where estab.etbcod = ttentrada.etbcod NO-LOCK NO-ERROR.
-    IF avail estab THEN DO:
-        FIND supervisor WHERE supervisor.supcod = estab.supcod NO-LOCK NO-ERROR.
-        IF avail supervisor THEN
-            vsupnom = supervisor.supnom.
-        ELSE
-            vsupnom = "".
-        CREATE ttestab.
-        ttestab.etbcod = estab.etbcod.
-        ttestab.etbnom = estab.etbnom.
-        ttestab.munic = estab.munic.
-        ttestab.supcod = estab.supcod.
-        ttestab.supnom = vsupnom.
-        ttestab.recatu = recid(estab).
-    END.
+    open query q-leitura for each estab where estab.etbcod = ttentrada.etbcod NO-LOCK.
 END.
 ELSE DO:
     open query q-leitura for each estab no-lock.
+END.
 
-    IF vrecatu <> ? THEN DO:
-        reposition q-leitura to recid vrecatu no-error.
-        get next  q-leitura.  
-        if not avail estab
-        then do:
-            vrecatu = ?.
-            return.
-        end.
-    END.
+if vlinha = ? or vlinha = 0 then vlinha = 1.
 
-    REPEAT:
-        IF ttentrada.acao = "prev" THEN
-            get prev  q-leitura. 
-        ELSE
-            get next  q-leitura. 
+if ttentrada.botao = "prev"
+then do:
+    vlinha = vlinha - vqtd .
+    if vlinha > 0
+    then do:
+        reposition q-leitura to row vlinha no-error.
+    end.
+    else do:
+        vlinha = 1.
+    end.
+end.
+else do:
+    if vlinha > 1
+    then do:
+        reposition q-leitura to row vlinha no-error.
+        get next q-leitura.
+        vlinha = vlinha + 1.
+    end.
+end.
 
-        IF NOT AVAIL estab THEN LEAVE.
+REPEAT:
+    get next q-leitura.
+    if not avail estab then do:
+        vlinha = ?.
+        leave.
+    end.
 
-        FIND supervisor WHERE supervisor.supcod = estab.supcod NO-LOCK NO-ERROR.
-        IF avail supervisor THEN
-            vsupnom = supervisor.supnom.
-        ELSE
-            vsupnom = "".
+    IF NOT AVAIL estab THEN LEAVE.
+    FIND supervisor WHERE supervisor.supcod = estab.supcod NO-LOCK NO-ERROR.
+    IF avail supervisor THEN
+        vsupnom = supervisor.supnom.
+    ELSE
+        vsupnom = "".
 
-        CREATE ttestab.
-        ttestab.etbcod = estab.etbcod.
-        ttestab.etbnom = estab.etbnom.
-        ttestab.munic = estab.munic.
-        ttestab.supcod = estab.supcod.
-        ttestab.supnom = vsupnom.
-        ttestab.recatu = recid(estab).
+    CREATE ttestab.
+    ttestab.etbcod = estab.etbcod.
+    ttestab.etbnom = estab.etbnom.
+    ttestab.munic = estab.munic.
+    ttestab.supcod = estab.supcod.
+    ttestab.supnom = vsupnom.
+    ttestab.linha = vlinha.
 
-        vqtd = vqtd - 1.
-        IF vqtd <= 0 THEN LEAVE.
+    vlinha = vlinha + 1.
 
-    END.
+    vqtd = vqtd - 1.
+    IF vqtd <= 0 THEN LEAVE.
 END.
 
 find first ttestab no-error.

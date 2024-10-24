@@ -54,8 +54,9 @@
 <?php include_once ROOT . "/vendor/footer_js.php"; ?>
 
 <script>  
-    var prirecatu = null;
-    var ultrecatu = null;
+    var qtdParam = 10;
+    var prilinha = null;
+    var ultlinha = null;
 
     $(document).on('click', '.ts-acionaZoomEstab', function() {
         event.preventDefault(); 
@@ -64,7 +65,7 @@
     });
 
 
-    function buscarEstab(buscaEstab, recatuParam, acao) {
+    function buscarEstab(buscaEstab, linhaParam, botao) {
      
         $.ajax({
             type: 'POST',
@@ -72,8 +73,9 @@
             url: "<?php echo URLROOT ?>/cadastros/database/estab.php?operacao=buscar",
             data: {
                 etbcod: buscaEstab,
-                recatu: recatuParam,
-                acao: acao
+                linha: linhaParam,
+                qtd: qtdParam,
+                botao: botao
             },
             async: false,
             success: function (msg) {
@@ -103,42 +105,40 @@
                 $("#dadosEstab").html(linha);
 
                 $("#prevPage, #nextPage").show();
-                if (recatuParam == null) {
+                if (linhaParam == null) {
                     $("#prevPage").hide();
                 }
-                if (json.length < 10) {
+                if (json.length < qtdParam) {
                     $("#nextPage").hide();
                 }
 
                 if (json.length > 0) {
-                    prirecatu = json[0].recatu;
-                    ultrecatu = json[json.length - 1].recatu;
-                    if (json[0].etbcod == 1) {
-                        prirecatu = null;
-                        $("#prevPage").hide();
-                    }
+                    prilinha = json[0].linha;
+                    ultlinha = json[json.length - 1].linha;
+                }
+                if (json[0].prilinha == 1) {
+                    prilinha = null;
+                    $("#prevPage").hide();
                 }
             }
         });
     }
     $("#buscar").click(function () {
-        recatu = null;
         buscarEstab($("#buscaEstab").val(), null, null);
     })
 
     document.addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
-            recatu = null;
             buscarEstab($("#buscaEstab").val(), null, null);
         }
     });
 
     $("#prevPage").click(function () {
-        buscarEstab($("#buscaEstab").val(), prirecatu, "prev");
+        buscarEstab($("#buscaEstab").val(), prilinha, "prev");
     });
 
     $("#nextPage").click(function () {
-        buscarEstab($("#buscaEstab").val(), ultrecatu, "next");
+        buscarEstab($("#buscaEstab").val(), ultlinha, "next");
     });
 
 </script>

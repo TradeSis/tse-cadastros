@@ -222,9 +222,6 @@ include_once (__DIR__ . '/../header.php');
                         plinha = null;
                         $("#prevPage").hide();
                     }
-                    if (linhaParam == null) {
-                        $("#prevPage").hide();
-                    }
                     if (estab.length < qtdParam) {
                         $("#nextPage").hide();
                     }

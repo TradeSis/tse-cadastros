@@ -116,7 +116,7 @@
                     prilinha = json[0].linha;
                     ultlinha = json[json.length - 1].linha;
                 }
-                if (json[0].prilinha == 1) {
+                if (prilinha == 1) {
                     prilinha = null;
                     $("#prevPage").hide();
                 }

@@ -164,8 +164,9 @@ include_once (__DIR__ . '/../header.php');
     <?php include_once ROOT . "/vendor/footer_js.php"; ?>
 
     <script>
-
-        var pagina = 0;
+        var qtdParam = 10;
+        var prilinha = null;
+        var ultlinha = null;
 
         buscar();
 
@@ -174,7 +175,7 @@ include_once (__DIR__ . '/../header.php');
             window.location.reload();
         }
 
-        function buscar(buscaEstab, pagina) {
+        function buscar(buscaEstab, linhaParam, botao) {
             //alert (buscaEstab);
             $.ajax({
                 type: 'POST',
@@ -185,7 +186,9 @@ include_once (__DIR__ . '/../header.php');
                 },
                 data: {
                     etbcod: buscaEstab,
-                    pagina: pagina,
+                    linha: linhaParam,
+                    qtd: qtdParam,
+                    botao: botao
                 },
                 async: false,
                 success: function (msg) {
@@ -207,37 +210,40 @@ include_once (__DIR__ . '/../header.php');
                     $("#dados").html(linha);
 
                     $("#prevPage, #nextPage").show();
-                    if (pagina == 0) {
+                    if (linhaParam == null) {
                         $("#prevPage").hide();
                     }
-                    if (json.length < 10) {
+                    if (json.length < qtdParam) {
                         $("#nextPage").hide();
+                    }
+
+                    if (json.length > 0) {
+                        prilinha = json[0].linha;
+                        ultlinha = json[json.length - 1].linha;
+                    }
+                    if (prilinha == 1) {
+                        prilinha = null;
+                        $("#prevPage").hide();
                     }
                 }
             });
         }
         $("#buscar").click(function () {
-            pagina = 0;
-            buscar($("#buscaEstab").val(), pagina);
+            buscar($("#buscaEstab").val(), null, null);
         })
 
         document.addEventListener("keypress", function (e) {
             if (e.key === "Enter") {
-                pagina = 0;
-                buscar($("#buscaEstab").val(), pagina);
+                buscar($("#buscaEstab").val(), null, null);
             }
         });
 
         $("#prevPage").click(function () {
-            if (pagina > 0) {
-                pagina -= 10;
-                buscar($("#buscaEstab").val(), pagina);
-            }
+            buscar($("#buscaEstab").val(), prilinha, "prev");
         });
 
         $("#nextPage").click(function () {
-            pagina += 10;
-            buscar($("#buscaEstab").val(), pagina);
+            buscar($("#buscaEstab").val(), ultlinha, "next");
         });
 
         $(document).on('click', 'button[data-bs-target="#alterarEstabModal"]', function () {

@@ -83,7 +83,6 @@ REPEAT:
         leave.
     end.
 
-    IF NOT AVAIL estab THEN LEAVE.
     FIND supervisor WHERE supervisor.supcod = estab.supcod NO-LOCK NO-ERROR.
     IF avail supervisor THEN
         vsupnom = supervisor.supnom.

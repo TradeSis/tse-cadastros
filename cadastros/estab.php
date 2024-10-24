@@ -172,8 +172,7 @@ include_once (__DIR__ . '/../header.php');
 
     <script>
         var qtdParam = 12;
-        var prilinha = null;
-        var ultlinha = null;
+        var plinha = null;
 
         buscar();
 
@@ -218,6 +217,11 @@ include_once (__DIR__ . '/../header.php');
                     $("#dados").html(linha);
 
                     $("#prevPage, #nextPage").show();
+                    
+                    if (json.total[0].linha == 1) {
+                        plinha = null;
+                        $("#prevPage").hide();
+                    }
                     if (linhaParam == null) {
                         $("#prevPage").hide();
                     }
@@ -225,14 +229,7 @@ include_once (__DIR__ . '/../header.php');
                         $("#nextPage").hide();
                     }
 
-                    if (estab.length > 0) {
-                        prilinha = estab[0].linha;
-                        ultlinha = estab[estab.length - 1].linha;
-                    }
-                    if (prilinha == 1) {
-                        prilinha = null;
-                        $("#prevPage").hide();
-                    }
+                    plinha = json.total[0].linha + qtdParam;
 
                     if (linhaParam == null) {
                         $("#prevPage").hide();
@@ -241,6 +238,8 @@ include_once (__DIR__ . '/../header.php');
                         var texto = $("#textocontador");
                         texto.html('Total: ' + totalData.qtdRegistros);
                     }
+
+
                 }
             });
         }
@@ -255,11 +254,11 @@ include_once (__DIR__ . '/../header.php');
         });
 
         $("#prevPage").click(function () {
-            buscar($("#buscaEstab").val(), prilinha, "prev");
+            buscar($("#buscaEstab").val(), plinha, "prev");
         });
 
         $("#nextPage").click(function () {
-            buscar($("#buscaEstab").val(), ultlinha, "next");
+            buscar($("#buscaEstab").val(), plinha, "next");
         });
 
         $(document).on('click', 'button[data-bs-target="#alterarEstabModal"]', function () {

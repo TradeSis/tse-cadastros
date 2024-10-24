@@ -19,11 +19,12 @@ def temp-table ttestab  no-undo serialize-name "estab"  /* JSON SAIDA */
     FIELD etbnom like estab.etbnom
     FIELD munic like estab.munic
     FIELD supcod like estab.supcod
-    FIELD supnom LIKE supervisor.supnom
-    FIELD linha  AS int.
+    FIELD supnom LIKE supervisor.supnom.
     
 def temp-table tttotal  no-undo serialize-name "total"  /* JSON SAIDA */
-    field qtdRegistros   as char.
+    field qtdRegistros   as char
+    FIELD linha  AS int.
+
 
 def dataset conteudoSaida for ttestab, tttotal.
 
@@ -36,6 +37,7 @@ def var vsupnom   as char.
 def query q-leitura for estab scrolling.
 def var vlinha as int.
 def var vqtd as int.
+def var vinicial    as int.
 
 hEntrada = temp-table ttentrada:HANDLE.
 lokJSON = hentrada:READ-JSON("longchar",vlcentrada, "EMPTY") no-error.
@@ -60,20 +62,18 @@ then do:
     if vlinha > 0
     then do:
         reposition q-leitura to row vlinha no-error.
-        get next q-leitura.
-        vlinha = vlinha + 1.
     end.
     else do:
         vlinha = 1.
     end.
+    vinicial = vlinha.
 end.
 else do:
     if vlinha > 1
     then do:
         reposition q-leitura to row vlinha no-error.
-        get next q-leitura.
-        vlinha = vlinha + 1.
     end.
+    vinicial = vlinha.
 end.
 
 REPEAT:
@@ -96,13 +96,34 @@ REPEAT:
     ttestab.munic = estab.munic.
     ttestab.supcod = estab.supcod.
     ttestab.supnom = vsupnom.
-    ttestab.linha = vlinha.
 
     vlinha = vlinha + 1.
-
     vqtd = vqtd - 1.
-    IF vqtd <= 0 THEN LEAVE.
+    if vqtd <= 0 then leave.
 END.
+
+
+create tttotal.
+tttotal.linha = vinicial.
+
+/* procura total*/
+if ttentrada.linha = ? and ttentrada.etbcod = ? 
+then do:
+    def var qtdtotal as int.
+
+    reposition q-leitura to row 1 no-error.
+
+    REPEAT:
+        get next q-leitura. 
+        if not avail estab then do:
+            leave.
+        end.
+
+        qtdtotal = qtdtotal + 1.
+    END.
+    tttotal.qtdRegistros = string(qtdtotal).
+end.
+
 
 find first ttestab no-error.
 if not avail ttestab
@@ -117,26 +138,6 @@ then do:
     message string(vlcSaida).
     return.
 end.
-
-/* procura total*/
-if ttentrada.linha = ? and ttentrada.etbcod = ? 
-then do:
-    def var qtdtotal as int.
-
-    reposition q-leitura to row 1 no-error.
-
-    REPEAT:
-        get next  q-leitura. 
-        if not avail estab then do:
-            leave.
-        end.
-        qtdtotal = qtdtotal + 1.
-    END.
-
-    create tttotal.
-    tttotal.qtdRegistros = string(qtdtotal).
-end.
-
     
 
 hsaida  = dataset conteudoSaida:handle.

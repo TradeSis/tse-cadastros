@@ -55,8 +55,7 @@
 
 <script>  
     var etbqtdParam = 10;
-    var etbprilinha = null;
-    var etbultlinha = null;
+    var etblinha = null;
 
     $(document).on('click', '.ts-acionaZoomEstab', function() {
         event.preventDefault(); 
@@ -104,9 +103,11 @@
                 $("#dadosEstab").html(linha);
 
                 $("#etbPrevPage, #etbNextPage").show();
-                etbprilinha = estab[0].linha;
-                etbultlinha = estab[estab.length - 1].linha;
 
+                if (json.total[0].linha == 1) {
+                    etblinha = null;
+                    $("#etbPrevPage").hide();
+                }
                 if (etblinhaParam == null) {
                     $("#etbPrevPage").hide();
                 }
@@ -114,10 +115,8 @@
                     $("#etbNextPage").hide();
                 }
                 
-                if (etbprilinha == 1) {
-                    etbprilinha = null;
-                    $("#etbPrevPage").hide();
-                }
+                etblinha = json.total[0].linha + etbqtdParam;
+
             }
         });
     }
@@ -134,11 +133,11 @@
     }); */
 
     $("#etbPrevPage").click(function () {
-        buscarEstab($("#buscaEstab").val(), etbultlinha, "prev");
+        buscarEstab($("#buscaEstab").val(), etblinha, "prev");
     });
 
     $("#etbNextPage").click(function () {
-        buscarEstab($("#buscaEstab").val(), etbultlinha, "next");
+        buscarEstab($("#buscaEstab").val(), etblinha, "next");
     });
 
 </script>

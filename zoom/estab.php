@@ -15,7 +15,7 @@
                                 <div class="col-12 d-flex gap-2">
                                     <input type="text" placeholder="Digite o codigo do estabelecimento"
                                         class="form-control ts-input" id="buscaEstab" name="buscaEstab">
-                                        <button class="btn btn btn-success" type="button" id="buscar">Buscar</i></button>
+                                        <button class="btn btn btn-success" type="button" id="buscarETB">Buscar</i></button>
                                 </div>
                             </div>
 
@@ -38,8 +38,8 @@
                             </div>
                         </div>
                         <div class="container text-center my-1">
-                            <button id="prevPage" class="btn btn-primary mr-2" style="display:none;">Anterior</button>
-                            <button id="nextPage" class="btn btn-primary" style="display:none;">Proximo</button>
+                            <button id="etbPrevPage" class="btn btn-primary mr-2" style="display:none;">Anterior</button>
+                            <button id="etbNextPage" class="btn btn-primary" style="display:none;">Proximo</button>
                         </div>
                     </div>
                 </div>
@@ -54,9 +54,9 @@
 <?php include_once ROOT . "/vendor/footer_js.php"; ?>
 
 <script>  
-    var qtdParam = 10;
-    var prilinha = null;
-    var ultlinha = null;
+    var etbqtdParam = 10;
+    var etbprilinha = null;
+    var etbultlinha = null;
 
     $(document).on('click', '.ts-acionaZoomEstab', function() {
         event.preventDefault(); 
@@ -65,7 +65,7 @@
     });
 
 
-    function buscarEstab(buscaEstab, linhaParam, botao) {
+    function buscarEstab(buscaEstab, etblinhaParam, etbbotao) {
      
         $.ajax({
             type: 'POST',
@@ -73,9 +73,9 @@
             url: "<?php echo URLROOT ?>/cadastros/database/estab.php?operacao=buscar",
             data: {
                 etbcod: buscaEstab,
-                linha: linhaParam,
-                qtd: qtdParam,
-                botao: botao
+                linha: etblinhaParam,
+                qtd: etbqtdParam,
+                botao: etbbotao
             },
             async: false,
             success: function (msg) {
@@ -87,7 +87,7 @@
                 }
                 if (json.status === 400) {
                     alert("Nenhum estabelecimento foi encontrado");
-                    $("#nextPage").hide();
+                    $("#etbNextPage").hide();
                     return;
                 }
                 var estab = json.estab;
@@ -103,41 +103,42 @@
                 }
                 $("#dadosEstab").html(linha);
 
-                $("#prevPage, #nextPage").show();
-                if (linhaParam == null) {
-                    $("#prevPage").hide();
-                }
-                if (estab.length < qtdParam) {
-                    $("#nextPage").hide();
-                }
+                $("#etbPrevPage, #etbNextPage").show();
+                etbprilinha = estab[0].linha;
+                etbultlinha = estab[estab.length - 1].linha;
 
-                if (estab.length > 0) {
-                    prilinha = estab[0].linha;
-                    ultlinha = estab[estab.length - 1].linha;
+                if (etblinhaParam == null) {
+                    $("#etbPrevPage").hide();
                 }
-                if (prilinha == 1) {
-                    prilinha = null;
-                    $("#prevPage").hide();
+                if (estab.length < etbqtdParam) {
+                    $("#etbNextPage").hide();
+                }
+                
+                if (etbprilinha == 1) {
+                    etbprilinha = null;
+                    $("#etbPrevPage").hide();
                 }
             }
         });
     }
-    $("#buscar").click(function () {
+
+    $("#buscarETB").click(function () {
         buscarEstab($("#buscaEstab").val(), null, null);
     })
 
+    /*
     document.addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
             buscarEstab($("#buscaEstab").val(), null, null);
         }
+    }); */
+
+    $("#etbPrevPage").click(function () {
+        buscarEstab($("#buscaEstab").val(), etbultlinha, "prev");
     });
 
-    $("#prevPage").click(function () {
-        buscarEstab($("#buscaEstab").val(), prilinha, "prev");
-    });
-
-    $("#nextPage").click(function () {
-        buscarEstab($("#buscaEstab").val(), ultlinha, "next");
+    $("#etbNextPage").click(function () {
+        buscarEstab($("#buscaEstab").val(), etbultlinha, "next");
     });
 
 </script>

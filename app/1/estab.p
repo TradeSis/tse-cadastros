@@ -56,10 +56,12 @@ if vlinha = ? or vlinha = 0 then vlinha = 1.
 
 if ttentrada.botao = "prev"
 then do:
-    vlinha = vlinha - vqtd .
+    vlinha = vlinha - vqtd - vqtd .
     if vlinha > 0
     then do:
         reposition q-leitura to row vlinha no-error.
+        get next q-leitura.
+        vlinha = vlinha + 1.
     end.
     else do:
         vlinha = 1.

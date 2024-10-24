@@ -81,20 +81,19 @@
             success: function (msg) {
                 //alert(msg)
                 var json = JSON.parse(msg);
-                var linha = "";
                 if (json === null) {
                     $("#dadosEstab").html("Erro ao buscar");
                     return;
                 }
-
                 if (json.status === 400) {
                     alert("Nenhum estabelecimento foi encontrado");
                     $("#nextPage").hide();
                     return;
                 }
-
-                for (var $i = 0; $i < json.length; $i++) {
-                    var object = json[$i];
+                var estab = json.estab;
+                var linha = "";
+                for (var $i = 0; $i < estab.length; $i++) {
+                    var object = estab[$i];
 
                     linha = linha + "<tr>";
                     linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "' data-munic='" + object.munic + "'>" + object.etbcod + "</td>";
@@ -108,13 +107,13 @@
                 if (linhaParam == null) {
                     $("#prevPage").hide();
                 }
-                if (json.length < qtdParam) {
+                if (estab.length < qtdParam) {
                     $("#nextPage").hide();
                 }
 
-                if (json.length > 0) {
-                    prilinha = json[0].linha;
-                    ultlinha = json[json.length - 1].linha;
+                if (estab.length > 0) {
+                    prilinha = estab[0].linha;
+                    ultlinha = estab[estab.length - 1].linha;
                 }
                 if (prilinha == 1) {
                     prilinha = null;

@@ -151,9 +151,12 @@ include_once (__DIR__ . '/../header.php');
         </div>
 
     </div><!--container-fluid-->
-    <div class="container text-center my-1">
-        <button id="prevPage" class="btn btn-primary mr-2" style="display:none;">Anterior</button>
-        <button id="nextPage" class="btn btn-primary" style="display:none;">Proximo</button>
+    <div class="fixed-bottom d-flex justify-content-between align-items-center" style="padding: 10px; background-color: #f8f9fa;">
+        <h6 id="textocontador" style="color: #13216A; margin-right: auto;"></h6>
+        <div class="d-flex justify-content-center w-100">
+            <button id="prevPage" class="btn btn-primary mr-2" style="display:none;">Anterior</button>
+            <button id="nextPage" class="btn btn-primary" style="display:none;">Proximo</button>
+        </div>
     </div>
 
     <!-- MODAIS DE ZOOM -->
@@ -194,9 +197,10 @@ include_once (__DIR__ . '/../header.php');
                 success: function (msg) {
                     //alert(msg);
                     var json = JSON.parse(msg);
+                    var estab = json.estab; 
                     var linha = "";
-                    for (var $i = 0; $i < json.length; $i++) {
-                        var object = json[$i];
+                    for (var $i = 0; $i < estab.length; $i++) {
+                        var object = estab[$i];
 
                         linha = linha + "<tr>";
                         linha = linha + "<td class='ts-click' data-etbcod='" + object.etbcod + "'>" + object.etbcod + "</td>";
@@ -213,17 +217,25 @@ include_once (__DIR__ . '/../header.php');
                     if (linhaParam == null) {
                         $("#prevPage").hide();
                     }
-                    if (json.length < qtdParam) {
+                    if (estab.length < qtdParam) {
                         $("#nextPage").hide();
                     }
 
-                    if (json.length > 0) {
-                        prilinha = json[0].linha;
-                        ultlinha = json[json.length - 1].linha;
+                    if (estab.length > 0) {
+                        prilinha = estab[0].linha;
+                        ultlinha = estab[estab.length - 1].linha;
                     }
                     if (prilinha == 1) {
                         prilinha = null;
                         $("#prevPage").hide();
+                    }
+
+                    if (linhaParam == null) {
+                        $("#prevPage").hide();
+
+                        var totalData = json.total[0]; 
+                        var texto = $("#textocontador");
+                        texto.html('Total: ' + totalData.qtdRegistros);
                     }
                 }
             });

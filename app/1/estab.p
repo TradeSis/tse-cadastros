@@ -21,6 +21,11 @@ def temp-table ttestab  no-undo serialize-name "estab"  /* JSON SAIDA */
     FIELD supcod like estab.supcod
     FIELD supnom LIKE supervisor.supnom
     FIELD linha  AS int.
+    
+def temp-table tttotal  no-undo serialize-name "total"  /* JSON SAIDA */
+    field qtdRegistros   as char.
+
+def dataset conteudoSaida for ttestab, tttotal.
 
 def temp-table ttsaida  no-undo serialize-name "conteudoSaida"  /* JSON SAIDA CASO ERRO */
     field tstatus        as int serialize-name "status"
@@ -111,7 +116,28 @@ then do:
     return.
 end.
 
-hsaida  = TEMP-TABLE ttestab:handle.
+/* procura total*/
+if ttentrada.linha = ? and ttentrada.etbcod = ? 
+then do:
+    def var qtdtotal as int.
+
+    reposition q-leitura to row 1 no-error.
+
+    REPEAT:
+        get next  q-leitura. 
+        if not avail estab then do:
+            leave.
+        end.
+        qtdtotal = qtdtotal + 1.
+    END.
+
+    create tttotal.
+    tttotal.qtdRegistros = string(qtdtotal).
+end.
+
+    
+
+hsaida  = dataset conteudoSaida:handle.
 
 
 lokJson = hsaida:WRITE-JSON("LONGCHAR", vlcSaida, TRUE).

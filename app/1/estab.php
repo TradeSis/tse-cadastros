@@ -38,11 +38,8 @@ $dados = json_decode($retorno, true);
 if (isset($dados["conteudoSaida"][0])) { // Conteudo Saida - Caso de erro
     $dados = $dados["conteudoSaida"][0];
 } else {
-    if((!isset($jsonEntrada['dadosEntrada'][0])) && ($jsonEntrada['dadosEntrada'][0]['etbcod'] != null)){
-        $dados = $dados['estab'][0];
-    }else{
-        $dados = $dados["estab"];
-    }
+
+    $dados = $dados["conteudoSaida"];  
 
 }
 

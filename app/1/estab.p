@@ -49,7 +49,7 @@ IF ttentrada.etbcod <> ? THEN DO:
     open query q-leitura for each estab where estab.etbcod = ttentrada.etbcod NO-LOCK.
 END.
 ELSE DO:
-    open query q-leitura for each estab no-lock.
+    open query q-leitura for each estab no-lock by estab.tipoloja by estab.munic by estab.etbcod.
 END.
 
 if vlinha = ? or vlinha = 0 then vlinha = 1.
@@ -90,7 +90,7 @@ REPEAT:
 
     CREATE ttestab.
     ttestab.etbcod = estab.etbcod.
-    ttestab.etbnom = estab.etbnom.
+    ttestab.etbnom = estab.tipoloja + " " + estab.etbnom.
     ttestab.munic = estab.munic.
     ttestab.supcod = estab.supcod.
     ttestab.supnom = vsupnom.

@@ -167,7 +167,7 @@ include_once (__DIR__ . '/../header.php');
     <?php include_once ROOT . "/vendor/footer_js.php"; ?>
 
     <script>
-        var qtdParam = 10;
+        var qtdParam = 12;
         var prilinha = null;
         var ultlinha = null;
 
